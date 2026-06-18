@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.barogo-gangnam.example.com/sitemap.xml
+Sitemap: https://barogo-gangnam-massage.pages.dev/sitemap.xml

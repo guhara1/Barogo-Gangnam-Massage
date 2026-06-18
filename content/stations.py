@@ -2,6 +2,7 @@
 # 환승역도 역명 기준 URL 1개만 운영한다. 출구별·노선별·역+테마 조합 페이지는 만들지 않는다.
 from .site import PHONE, PHONE_DISPLAY
 from .pricing import PRICING
+from .related import station_related_html
 
 _CTA = f"""
 <section class="cta">
@@ -59,12 +60,13 @@ _HUB_BODY = """
 
 
 def _station(path, name, title, desc, body):
+    slug = path.split("/")[1].replace("-chuljangmassage", "")
     return {
         "path": path,
         "title": title,
         "desc": desc,
         "h1": f"{name} 인근 방문 관리 안내",
-        "body": body + PRICING + _CTA,
+        "body": body + station_related_html(slug) + PRICING + _CTA,
         "breadcrumb": [("지하철역별 안내", "/gangnam/stations/"), (name, None)],
     }
 

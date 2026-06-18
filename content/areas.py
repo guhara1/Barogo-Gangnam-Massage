@@ -2,6 +2,7 @@
 # 번호 행정동(논현1·2동, 삼성1·2동, 개포1~4동 등) 개별 페이지는 만들지 않는다.
 from .site import PHONE, PHONE_DISPLAY
 from .pricing import PRICING
+from .related import dong_related_html
 
 _CTA = f"""
 <section class="cta">
@@ -61,12 +62,13 @@ _HUB_BODY = """
 """ + PRICING + _CTA
 
 def _dong(path, name, title, desc, sections):
+    slug = path.split("/")[1].replace("-chuljangmassage", "")
     return {
         "path": path,
         "title": title,
         "desc": desc,
         "h1": f"{name} 방문 관리 안내",
-        "body": sections + PRICING + _CTA,
+        "body": sections + dong_related_html(slug) + PRICING + _CTA,
         "breadcrumb": [("지역별 안내", "/gangnam/"), (name, None)],
     }
 

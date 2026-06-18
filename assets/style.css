@@ -540,6 +540,8 @@ th { background: var(--panel-2); color: var(--gold-soft); font-family: var(--ser
 }
 .footer-copy { font-size: 0.78rem; opacity: 0.75; margin: 0; }
 .footer-note { font-size: 0.76rem; opacity: 0.55; margin: 0; }
+.related { margin-top: 30px; padding-top: 22px; border-top: 1px solid var(--line-gold); }
+.related > h2 { font-size: 1.15rem; }
 .footer-tg-group { display: flex; gap: 8px; flex-wrap: wrap; }
 .footer-tg {
   display: inline-flex; align-items: center;

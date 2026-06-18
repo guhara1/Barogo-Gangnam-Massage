@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://barogo-gangnam-massage.pages.dev/sitemap.xml
+Sitemap: https://barogo-gangnam-massage.pages.dev/rss.xml

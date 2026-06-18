@@ -16,12 +16,16 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
+from datetime import datetime, timezone
+
 from content import PAGES
-from content.site import (BASE_URL, BRAND, BRAND_MARK, NAV, PHONE, PHONE_DISPLAY)
+from content.site import (BASE_URL, BRAND, BRAND_MARK, INDEXNOW_KEY, NAV,
+                          PHONE, PHONE_DISPLAY)
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 MIN_INDEX_CHARS = 2000
 MAX_DESC_CHARS = 80
+BUILD_DATE = datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
 
 def text_length(body_html: str) -> int:
@@ -258,6 +262,8 @@ def build() -> None:
     report = []
     sitemap_urls = []
 
+    articles = []  # 매거진 글 (RSS 용)
+
     for page in PAGES:
         path = page["path"]  # "" 또는 "gangnam/sinsa-dong-chuljangmassage/" 형태
         out_dir = os.path.join(ROOT, path)
@@ -269,13 +275,20 @@ def build() -> None:
         chars = text_length(page["body"])
         noindex = page.get("noindex", False) or chars < MIN_INDEX_CHARS
         if not noindex:
-            sitemap_urls.append(BASE_URL.rstrip("/") + "/" + path)
+            loc = BASE_URL.rstrip("/") + "/" + path
+            lastmod = page.get("date", BUILD_DATE)
+            sitemap_urls.append((loc, lastmod))
+        if page.get("date") and path.startswith("magazine/") and path != "magazine/":
+            articles.append(page)
         desc_len = len(page.get("desc", ""))
         report.append((path or "/", chars, "noindex" if noindex else "index", desc_len))
 
-    # sitemap.xml
+    base = BASE_URL.rstrip("/")
+
+    # sitemap.xml (lastmod 포함 — 색인 갱신 신호)
     urls = "\n".join(
-        f"  <url><loc>{u}</loc></url>" for u in sitemap_urls
+        f"  <url><loc>{loc}</loc><lastmod>{lastmod}</lastmod></url>"
+        for loc, lastmod in sitemap_urls
     )
     with open(os.path.join(ROOT, "sitemap.xml"), "w", encoding="utf-8") as f:
         f.write(
@@ -284,12 +297,53 @@ def build() -> None:
             f"{urls}\n</urlset>\n"
         )
 
-    # robots.txt
+    # rss.xml (매거진 피드 — 빠른 발견·구독)
+    articles.sort(key=lambda p: p.get("date", ""), reverse=True)
+    last_build = datetime.now(timezone.utc).strftime("%a, %d %b %Y %H:%M:%S +0000")
+    items = []
+    for a in articles:
+        link = base + "/" + a["path"]
+        try:
+            pub = datetime.strptime(a["date"], "%Y-%m-%d").strftime(
+                "%a, %d %b %Y 09:00:00 +0900")
+        except ValueError:
+            pub = last_build
+        items.append(
+            "    <item>\n"
+            f"      <title>{html.escape(a.get('title_plain') or a['title'])}</title>\n"
+            f"      <link>{link}</link>\n"
+            f"      <guid isPermaLink=\"true\">{link}</guid>\n"
+            f"      <description>{html.escape(a['desc'])}</description>\n"
+            f"      <pubDate>{pub}</pubDate>\n"
+            "    </item>"
+        )
+    rss = (
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">\n'
+        "  <channel>\n"
+        f"    <title>{html.escape(BRAND)} 매거진</title>\n"
+        f"    <link>{base}/magazine/</link>\n"
+        f'    <atom:link href="{base}/rss.xml" rel="self" type="application/rss+xml"/>\n'
+        "    <description>마사지·휴식·컨디션 관리 가이드</description>\n"
+        "    <language>ko-kr</language>\n"
+        f"    <lastBuildDate>{last_build}</lastBuildDate>\n"
+        + "\n".join(items)
+        + "\n  </channel>\n</rss>\n"
+    )
+    with open(os.path.join(ROOT, "rss.xml"), "w", encoding="utf-8") as f:
+        f.write(rss)
+
+    # robots.txt — 모든 봇 허용 + sitemap·rss 안내 (구글봇·빙봇·네이버 Yeti 포함)
     with open(os.path.join(ROOT, "robots.txt"), "w", encoding="utf-8") as f:
         f.write(
             "User-agent: *\nAllow: /\n\n"
-            f"Sitemap: {BASE_URL.rstrip('/')}/sitemap.xml\n"
+            f"Sitemap: {base}/sitemap.xml\n"
+            f"Sitemap: {base}/rss.xml\n"
         )
+
+    # IndexNow 키 파일 (사이트 루트에 호스팅되어야 함)
+    with open(os.path.join(ROOT, f"{INDEXNOW_KEY}.txt"), "w", encoding="utf-8") as f:
+        f.write(INDEXNOW_KEY + "\n")
 
     # .nojekyll (GitHub Pages)
     open(os.path.join(ROOT, ".nojekyll"), "w").close()

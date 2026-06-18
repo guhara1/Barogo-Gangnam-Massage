@@ -55,8 +55,27 @@ python3 build.py
 - 모든 페이지 본문은 페이지별 고유 작성 (지역명만 바꾼 복붙 없음)
 - 방문형 사이트로 오프라인 주소가 없어 **LocalBusiness Schema 미사용** (Organization 사용)
 
+## 색인(인덱싱) 산출물
+
+`python3 build.py` 가 함께 생성합니다:
+
+- `sitemap.xml` — 전 색인 페이지 + `<lastmod>`
+- `rss.xml` — 매거진 RSS 피드
+- `robots.txt` — 모든 봇 허용 + sitemap·rss 안내
+- `{key}.txt` — IndexNow 키 파일 (빙·네이버 즉시 색인 통보용)
+
+빠른 색인 도구는 `tools/`에 있습니다 (자세한 사용법: `tools/README.md`):
+
+```bash
+python3 tools/indexnow.py            # 빙·네이버 즉시 통보 (전체)
+python3 tools/indexnow.py <URL>      # 글 1개 올렸을 때 그 URL만
+python3 tools/google_indexing.py     # (선택) 구글 Indexing API
+```
+
 ## 배포 전 해야 할 일
 
-1. `content/site.py`의 `BASE_URL`을 실제 도메인으로 변경
-2. `python3 build.py` 재실행 (canonical·sitemap·robots.txt에 반영됨)
-3. Google Search Console에 `sitemap.xml` 제출
+1. `content/site.py`의 `BASE_URL`을 실제 도메인으로 변경 (현재: barogo-gangnam-massage.pages.dev)
+2. `python3 build.py` 재실행 (canonical·sitemap·rss·robots·키파일에 반영됨)
+3. 배포 후 `https://<도메인>/{key}.txt`, `/sitemap.xml`, `/rss.xml` 가 열리는지 확인
+4. `python3 tools/indexnow.py` 1회 실행 → 빙·네이버 일괄 통보
+5. Google Search Console·네이버 서치어드바이저에 `sitemap.xml`·`rss.xml` 제출

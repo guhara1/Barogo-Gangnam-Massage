@@ -74,7 +74,7 @@ python3 tools/google_indexing.py     # (선택) 구글 Indexing API
 
 ## 배포 전 해야 할 일
 
-1. `content/site.py`의 `BASE_URL`을 실제 도메인으로 변경 (현재: barogo-gangnam-massage.pages.dev)
+1. `content/site.py`의 `BASE_URL`을 실제 도메인으로 변경 (현재: barogo-gangnam-massage.netlify.app)
 2. `python3 build.py` 재실행 (canonical·sitemap·rss·robots·키파일에 반영됨)
 3. 배포 후 `https://<도메인>/{key}.txt`, `/sitemap.xml`, `/rss.xml` 가 열리는지 확인
 4. `python3 tools/indexnow.py` 1회 실행 → 빙·네이버 일괄 통보

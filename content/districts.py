@@ -1,6 +1,7 @@
 # 생활권·주요 거점별 안내 — 허브 1개 + 생활권 9개.
 from .site import PHONE, PHONE_DISPLAY
 from .pricing import PRICING
+from .related import area_related_html
 
 _CTA = f"""
 <section class="cta">
@@ -63,12 +64,13 @@ _HUB_BODY = """
 
 
 def _area(path, name, title, desc, body):
+    slug = path.split("/")[1].replace("-chuljangmassage", "")
     return {
         "path": path,
         "title": title,
         "desc": desc,
         "h1": f"{name} 방문 관리 안내",
-        "body": body + PRICING + _CTA,
+        "body": body + area_related_html(slug) + PRICING + _CTA,
         "breadcrumb": [("생활권별 안내", "/gangnam/districts/"), (name, None)],
     }
 

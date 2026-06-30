@@ -18,7 +18,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from datetime import datetime, timezone
 
-from content import PAGES
+from content import PAGES, schema
 from content.site import (BASE_URL, BRAND, BRAND_MARK, INDEXNOW_KEY, NAV,
                           PHONE, PHONE_DISPLAY)
 
@@ -109,6 +109,16 @@ def render_toc(items) -> str:
     )
 
 
+def _inject_reviews(body: str, block: str) -> str:
+    """후기 블록을 요금/CTA 섹션 앞에 끼워 넣는다(없으면 본문 끝)."""
+    for marker in ('<section class="pricing">', '<section class="cta">',
+                   '<section id="contact"'):
+        idx = body.find(marker)
+        if idx != -1:
+            return body[:idx] + block + body[idx:]
+    return body + block
+
+
 def render_page(page: dict) -> str:
     path = page["path"]
     title = page["title"]
@@ -116,8 +126,13 @@ def render_page(page: dict) -> str:
     h1 = page["h1"]
     body = page["body"]
     crumbs = page.get("breadcrumb") or []
-    extra_head = page.get("extra_head", "")
     hero = page.get("hero", "")
+
+    # 구조화 데이터(JSON-LD) + 후기 블록 — 중앙 생성.
+    jsonld, reviews_html = schema.build(page)
+    extra_head = (page.get("extra_head", "") or "") + jsonld
+    if reviews_html:
+        body = _inject_reviews(body, reviews_html)
 
     chars = text_length(body)
     noindex = page.get("noindex", False) or chars < MIN_INDEX_CHARS

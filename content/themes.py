@@ -1,6 +1,7 @@
 # 테마별 안내 — 허브 1개 + 테마 14개.
 # 테마는 독립 페이지로만 운영하며 지역·역과 조합한 페이지는 만들지 않는다.
 from .site import PHONE, PHONE_DISPLAY
+from .related import theme_related_html
 
 _CTA = f"""
 <section class="cta">
@@ -71,7 +72,7 @@ def _theme(slug, name, desc, body):
         "title": f"{name} 안내 | 강남 방문 관리 테마",
         "desc": desc,
         "h1": f"{name} 안내",
-        "body": body + _CTA,
+        "body": body + theme_related_html(slug, name) + _CTA,
         "breadcrumb": [("테마별 안내", "/themes/"), (name, None)],
     }
 

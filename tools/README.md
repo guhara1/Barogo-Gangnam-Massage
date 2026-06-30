@@ -24,7 +24,7 @@
 python3 tools/indexnow.py
 
 # 글/페이지 하나만 올렸을 때 — 그 URL만 즉시 통보
-python3 tools/indexnow.py https://barogo-gangnam-massage.pages.dev/magazine/새글/
+python3 tools/indexnow.py https://barogo-gangnam-massage.netlify.app/magazine/새글/
 
 # 실제 전송 없이 대상만 확인
 python3 tools/indexnow.py --dry-run

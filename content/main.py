@@ -4,7 +4,7 @@
 from .site import BASE_URL, BRAND, PHONE, PHONE_DISPLAY
 from .pricing import PRICING
 
-_NAVER = '<meta name="naver-site-verification" content="35c52da23682109c622271ae3af8e03ac90899e9" />\n'
+_NAVER = '<meta name="naver-site-verification" content="647a9cc625855efee472ffc82d4c5463bdbdd668" />\n'
 
 _JSONLD = f"""<script type="application/ld+json">
 {{
@@ -230,6 +230,25 @@ _BODY = f"""
 </div>
 </section>
 
+<section id="longtail" class="longtail">
+<h2>강남 출장마사지·홈타이 자주 찾는 주제</h2>
+<p>지역·역세권·테마를 조합한 검색이 많은 주제를 모았습니다. 원하는 항목에서 방문 가능 지역과 예약 기준을 바로 확인하실 수 있습니다.</p>
+<ul class="lt-grid">
+<li><a href="/gangnam/gangnam-station-chuljangmassage/">강남역 심야 출장마사지<span>강남역 인근 방문·24시간 상담 안내</span></a></li>
+<li><a href="/gangnam/yeoksam-dong-chuljangmassage/">역삼동 홈타이 예약<span>테헤란로 업무지구 방문 관리</span></a></li>
+<li><a href="/gangnam/apgujeong-dong-chuljangmassage/">압구정동 출장마사지<span>압구정·청담 생활권 안내</span></a></li>
+<li><a href="/gangnam/seolleung-station-chuljangmassage/">선릉역 인근 출장마사지<span>오피스·숙소 방문 안내</span></a></li>
+<li><a href="/gangnam/coex-samseong-area-chuljangmassage/">삼성역·코엑스 출장마사지<span>코엑스 생활권 방문 관리</span></a></li>
+<li><a href="/gangnam/daechi-dong-chuljangmassage/">대치동 홈타이<span>학원가·주거권 방문 안내</span></a></li>
+<li><a href="/themes/swedish/">강남 스웨디시 출장마사지<span>오일 전신 이완 관리</span></a></li>
+<li><a href="/themes/aroma/">강남 아로마 홈타이<span>향으로 푸는 휴식 관리</span></a></li>
+<li><a href="/themes/24hours/">강남 24시간 출장마사지<span>심야·새벽 방문 가능 안내</span></a></li>
+<li><a href="/magazine/swedish-vs-thai/">스웨디시와 타이마사지 비교<span>테마 선택 가이드</span></a></li>
+<li><a href="/magazine/post-workout-timing/">운동 후 회복 마사지 타이밍<span>언제 받는 게 좋을까</span></a></li>
+<li><a href="/magazine/first-time-guide/">처음 이용 가이드<span>예약부터 마무리까지</span></a></li>
+</ul>
+</section>
+
 {PRICING}
 <section id="contact" class="cta">
 <h2>예약문의</h2>
@@ -244,7 +263,7 @@ PAGE = {
     "desc": "강남 출장마사지·홈타이 예약 전 행정동, 역세권, 이용 기준을 정리했습니다.",
     "h1": "강남 출장마사지 · 강남구 홈타이 지역별 예약 안내",
     "body": _BODY,
-    "extra_head": _NAVER + _JSONLD,
+    "extra_head": _NAVER,
     "breadcrumb": [],
     "hero": _HERO,
 }
